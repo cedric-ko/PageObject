@@ -30,9 +30,7 @@ class MoneyTransferTest {
         int initialSecondCardBalance = dashBoardPage.getCardBalance(fromCard);
 
         var transferPage = dashBoardPage.selectCard(toCard);
-        transferPage.setAmount(amount);
-        transferPage.setFromCard(fromCard);
-        transferPage.transfer();
+        transferPage.transfer(amount, fromCard);
 
         int finalFirstCardBalance = dashBoardPage.getCardBalance(toCard); // проверяем балансы после операции
         int finalSecondCardBalance = dashBoardPage.getCardBalance(fromCard);
@@ -58,9 +56,7 @@ class MoneyTransferTest {
         int initialFirstCardBalance = dashBoardPage.getCardBalance(fromCard);
 
         var transferPage = dashBoardPage.selectCard(toCard);
-        transferPage.setAmount(amount);
-        transferPage.setFromCard(fromCard);
-        transferPage.transfer();
+        transferPage.transfer(amount, fromCard);
 
         int finalSecondCardBalance = dashBoardPage.getCardBalance(toCard);
         int finalFirstCardBalance = dashBoardPage.getCardBalance(fromCard);
@@ -79,13 +75,9 @@ class MoneyTransferTest {
         var loginPage = Selenide.open("http://localhost:9999", LoginPage.class);
         var verificationPage = loginPage.validLogin(authInfo);
         var dashBoardPage = verificationPage.validVerify(verificationCode);
-
         var transferPage = dashBoardPage.selectCard(toCard);
-        transferPage.setAmount(amount);
-        transferPage.transfer();
-        $("[data-test-id='error-notification'] .notification__title")
-                .shouldHave(text("Ошибка"))
-                .shouldBe(visible);
+        transferPage.emptyFromFieldError (amount, null);
+        transferPage.emptyFieldError();
     }
 
     @Test
@@ -98,12 +90,8 @@ class MoneyTransferTest {
         var loginPage = Selenide.open("http://localhost:9999", LoginPage.class);
         var verificationPage = loginPage.validLogin(authInfo);
         var dashBoardPage = verificationPage.validVerify(verificationCode);
-
         var transferPage = dashBoardPage.selectCard(toCard);
-        transferPage.setFromCard(fromCard);
-        transferPage.transfer();
-        $("[data-test-id='error-notification'] .notification__title")
-                .shouldHave(text("Ошибка"))
-                .shouldBe(visible);
+        transferPage.emptyAmountFieldError(null, fromCard);
+        transferPage.emptyFieldError();
     }
 }

@@ -25,51 +25,18 @@ public class TransferPage {
         cancelButton.shouldBe(visible);
     }
 
-    // для целей тестирования я разбил операцию перевода денег на несколько методов,
-    // чтобы сохранить инкапсуляцию и иметь возможность использовать в тесте
-    // приватные поля этого класса через его методы
-
-//    public void setAmount(int amount) {
-//        amountField.setValue(String.valueOf(amount));
-//    }
-//
-//    public void setFromCard(DataHelper.CardInfo fromCard) {
-//        fromField.setValue(fromCard.getNumber());
-//    }
-//
-//    public DashboardPage transfer() {
-//        transferButton.click();
-//        return new DashboardPage();
-//    }
-//
-//    public DashboardPage cancelTransfer() {
-//        cancelButton.click();
-//        return new DashboardPage();
-//    }
-
-    public DashboardPage transfer(int amount, DataHelper.CardInfo fromCard) {
-        amountField.setValue(String.valueOf(amount));
-        fromField.setValue(fromCard.getNumber());
-        transferButton.click();
+    public DashboardPage validTransfer(String amount, DataHelper.CardInfo fromCard) {
+        transfer(amount, fromCard.getNumber());
         return new DashboardPage();
     }
 
-    public DashboardPage emptyFromFieldError (int amount, String fromCard) {
-        amountField.setValue(String.valueOf(amount));
-        fromField.setValue((String) null);
+    public void transfer(String amount, String fromCard) {
+        amountField.setValue(amount);
+        fromField.setValue(fromCard);
         transferButton.click();
-        return null;
     }
 
-    public DashboardPage emptyAmountFieldError (String amount, DataHelper.CardInfo fromCard) {
-        amountField.setValue((String) null);
-        fromField.setValue(fromCard.getNumber());
-        transferButton.click();
-        errorNotification.shouldBe(visible);
-        return null;
-    }
-
-    public boolean emptyFieldError () {
-        return errorNotification.is(visible);
+    public void emptyFieldError(String expectedText) {
+        errorNotification.should(Condition.visible).shouldHave(Condition.text(expectedText));
     }
 }
